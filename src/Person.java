@@ -2,8 +2,10 @@
  * Person class represents a base entity for individuals in the theme park system.
  * This abstract base class provides common attributes and behaviors for both
  * employees and visitors, demonstrating strong cohesion and single responsibility.
+ * Part2: Made abstract to prevent direct instantiation - only concrete subclasses
+ * (Employee, Visitor) can be instantiated.
  */
-public class Person {
+public abstract class Person {
     // Instance variables with appropriate access modifiers for encapsulation
     private String firstName;
     private String lastName;
