@@ -3,6 +3,7 @@ public class AssignmentTwo {
         AssignmentTwo assignment = new AssignmentTwo();
         assignment.partThree();
         assignment.partFourA();
+        assignment.partFourB();
     }
     
     /**
@@ -185,7 +186,108 @@ public class AssignmentTwo {
         System.out.println("============================================\n");
     }
     
+    /**
+     * Part 4B: Demonstrates sorting ride history using Comparator interface.
+     * Shows the collection before and after sorting to demonstrate the sorting effect.
+     * Uses custom VisitorComparator with multi-criteria comparison.
+     */
     public void partFourB() {
+        System.out.println("\n============================================");
+        System.out.println("    PART 4B: SORTING RIDE HISTORY DEMO");
+        System.out.println("============================================\n");
+        
+        // Create an Employee to operate the ride
+        Employee operator = new Employee(
+            "Marcus", "Rodriguez", 35, "555-3001",
+            "EMP003", "Lead Ride Operator", 32.00, true
+        );
+        
+        // Create a new Ride object
+        Ride batwingSpaceshot = new Ride(
+            "Batwing Spaceshot",
+            "Tower Ride",
+            30,  // max capacity
+            10,  // minimum age
+            18.00,  // ticket price
+            operator,
+            true  // operational
+        );
+        
+        batwingSpaceshot.setOperator(operator);
+        
+        System.out.println("Ride Created: " + batwingSpaceshot.getRideName());
+        System.out.println("Type: Tower Ride");
+        System.out.println("\n--- Adding Visitors to Ride History ---\n");
+        
+        // Create 5+ visitors with different membership types and ages for sorting demonstration
+        Visitor visitor1 = new Visitor(
+            "Alexander", "Smith", 45, "555-2001",
+            "V201", "Standard", 55.00, 3
+        );
+        
+        Visitor visitor2 = new Visitor(
+            "Isabella", "Johnson", 28, "555-2002",
+            "V202", "Platinum", 180.00, 25
+        );
+        
+        Visitor visitor3 = new Visitor(
+            "Benjamin", "Lee", 35, "555-2003",
+            "V203", "Gold", 95.00, 18
+        );
+        
+        Visitor visitor4 = new Visitor(
+            "Charlotte", "Davis", 52, "555-2004",
+            "V204", "Platinum", 250.00, 40
+        );
+        
+        Visitor visitor5 = new Visitor(
+            "William", "Garcia", 22, "555-2005",
+            "V205", "Standard", 45.00, 2
+        );
+        
+        Visitor visitor6 = new Visitor(
+            "Amelia", "Martinez", 41, "555-2006",
+            "V206", "Gold", 110.00, 22
+        );
+        
+        // Add visitors to ride history
+        batwingSpaceshot.addVisitorToHistory(visitor1);
+        batwingSpaceshot.addVisitorToHistory(visitor2);
+        batwingSpaceshot.addVisitorToHistory(visitor3);
+        batwingSpaceshot.addVisitorToHistory(visitor4);
+        batwingSpaceshot.addVisitorToHistory(visitor5);
+        batwingSpaceshot.addVisitorToHistory(visitor6);
+        
+        System.out.println("\n--- Printing History BEFORE Sorting ---\n");
+        
+        // Print all visitors before sorting
+        batwingSpaceshot.printRideHistory();
+        
+        System.out.println("\n--- Sorting Ride History ---\n");
+        
+        // Create the comparator
+        VisitorComparator comparator = new VisitorComparator();
+        System.out.println("Sorting criteria: " + comparator.getSortingDescription());
+        
+        // Sort the collection using the comparator
+        batwingSpaceshot.sortRideHistory(comparator);
+        
+        System.out.println("\n--- Printing History AFTER Sorting ---\n");
+        
+        // Print all visitors after sorting to show the effect
+        batwingSpaceshot.printRideHistory();
+        
+        System.out.println("============================================");
+        System.out.println("Analysis of Sorting Results:");
+        System.out.println("- Platinum members appear first (highest priority)");
+        System.out.println("- Within Platinum: Age 52 before Age 28 (descending)");
+        System.out.println("- Gold members appear second");
+        System.out.println("- Within Gold: Age 41 before Age 35 (descending)");
+        System.out.println("- Standard members appear last");
+        System.out.println("- Within Standard: Age 45 before Age 22 (descending)");
+        System.out.println("============================================");
+        System.out.println("    PART 4B DEMO COMPLETED");
+        System.out.println("============================================\n");
     }
     
     public void partFive() {
