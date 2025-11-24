@@ -1,7 +1,6 @@
 import java.util.LinkedList;
 import java.util.Queue;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Iterator;
 
 /**
  * Ride class represents theme park attractions/rides.
@@ -23,8 +22,8 @@ public class Ride implements RideInterface {
     // Part2: Queue to manage visitors waiting for the ride (FIFO - First In First Out)
     private Queue<Visitor> visitorQueue;
     
-    // Part2: List to track ride history - visitors who have taken the ride
-    private List<Visitor> rideHistory;
+    // Part4A: LinkedList to track ride history - visitors who have taken the ride
+    private LinkedList<Visitor> rideHistory;
     
     /**
      * Default constructor
@@ -40,7 +39,7 @@ public class Ride implements RideInterface {
         this.operator = null;
         this.isOperational = false;
         this.visitorQueue = new LinkedList<>();
-        this.rideHistory = new ArrayList<>();
+        this.rideHistory = new LinkedList<>();
     }
     
     /**
@@ -65,7 +64,7 @@ public class Ride implements RideInterface {
         this.operator = operator;
         this.isOperational = isOperational;
         this.visitorQueue = new LinkedList<>();
-        this.rideHistory = new ArrayList<>();
+        this.rideHistory = new LinkedList<>();
     }
     
     // Getters for all Ride attributes
@@ -369,8 +368,9 @@ public class Ride implements RideInterface {
     }
     
     /**
-     * Prints all visitors who have taken the ride (ride history).
+     * Part4A: Prints all visitors who have taken the ride (ride history).
      * Displays complete ride history with visitor details.
+     * Uses Iterator to traverse the LinkedList collection as required.
      */
     @Override
     public void printRideHistory() {
@@ -381,8 +381,12 @@ public class Ride implements RideInterface {
         } else {
             System.out.println("Total number of visitors: " + rideHistory.size());
             System.out.println("------------------------------------------------------");
+            
+            // Part4A: Using Iterator to traverse the LinkedList
+            Iterator<Visitor> iterator = rideHistory.iterator();
             int count = 1;
-            for (Visitor visitor : rideHistory) {
+            while (iterator.hasNext()) {
+                Visitor visitor = iterator.next();
                 System.out.println(count + ". " + visitor.toString());
                 count++;
             }
