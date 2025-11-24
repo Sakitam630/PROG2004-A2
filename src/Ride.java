@@ -1,6 +1,8 @@
 import java.util.LinkedList;
 import java.util.Queue;
 import java.util.Iterator;
+import java.util.Collections;
+import java.util.Comparator;
 
 /**
  * Ride class represents theme park attractions/rides.
@@ -445,6 +447,29 @@ public class Ride implements RideInterface {
         System.out.println("  - Remaining in queue: " + visitorQueue.size());
         System.out.println("  - Total ride history: " + rideHistory.size());
         System.out.println("=========================================================\n");
+    }
+    
+    /**
+     * Part4B: Sorts the ride history using a custom Comparator.
+     * Uses Collections.sort() with the provided Comparator to reorder visitors.
+     * Demonstrates advanced collections manipulation and use of Comparator interface.
+     * 
+     * @param comparator The Comparator to use for sorting the ride history
+     */
+    public void sortRideHistory(Comparator<Visitor> comparator) {
+        if (comparator == null) {
+            System.out.println("Error: Cannot sort with null comparator.");
+            return;
+        }
+        
+        if (rideHistory.isEmpty()) {
+            System.out.println("Info: Ride history is empty. Nothing to sort.");
+            return;
+        }
+        
+        // Use Collections.sort with the provided Comparator
+        Collections.sort(rideHistory, comparator);
+        System.out.println("Success: Ride history has been sorted using custom comparator.");
     }
     
     /**
