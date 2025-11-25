@@ -4,6 +4,7 @@ public class AssignmentTwo {
         assignment.partThree();
         assignment.partFourA();
         assignment.partFourB();
+        assignment.partFive();
     }
     
     /**
@@ -290,7 +291,147 @@ public class AssignmentTwo {
         System.out.println("============================================\n");
     }
     
+    /**
+     * Part 5: Demonstrates running one ride cycle.
+     * Shows adding visitors to queue, running a cycle that moves visitors
+     * from queue to ride history, and displays the state before and after.
+     */
     public void partFive() {
+        System.out.println("\n============================================");
+        System.out.println("    PART 5: RUN ONE RIDE CYCLE DEMO");
+        System.out.println("============================================\n");
+        
+        // Create an Employee to operate the ride
+        Employee operator = new Employee(
+            "Jennifer", "Thompson", 29, "555-4001",
+            "EMP004", "Certified Ride Operator", 26.50, true
+        );
+        
+        // Create a new Ride object with specific maxRider capacity
+        Ride scoobyDooSpooky = new Ride(
+            "Scooby-Doo Spooky Coaster",
+            "Indoor Roller Coaster",
+            20,  // max capacity
+            7,   // minimum age
+            14.00,  // ticket price
+            operator,
+            true  // operational
+        );
+        
+        // Assign operator and set maxRider for this demonstration
+        scoobyDooSpooky.setOperator(operator);
+        scoobyDooSpooky.setMaxRider(4); // Only 4 riders per cycle for demonstration
+        
+        System.out.println("Ride Created: " + scoobyDooSpooky.getRideName());
+        System.out.println("Type: Indoor Roller Coaster");
+        System.out.println("Max Riders per Cycle: " + scoobyDooSpooky.getMaxRider());
+        System.out.println("\n--- Adding 10+ Visitors to Queue ---\n");
+        
+        // Create and add minimum 10 Visitors to the Queue
+        Visitor visitor1 = new Visitor(
+            "Noah", "White", 15, "555-3001",
+            "V301", "Standard", 50.00, 4
+        );
+        
+        Visitor visitor2 = new Visitor(
+            "Olivia", "Harris", 23, "555-3002",
+            "V302", "Gold", 88.00, 10
+        );
+        
+        Visitor visitor3 = new Visitor(
+            "Liam", "Martin", 18, "555-3003",
+            "V303", "Platinum", 145.00, 18
+        );
+        
+        Visitor visitor4 = new Visitor(
+            "Emma", "Garcia", 27, "555-3004",
+            "V304", "Gold", 92.00, 14
+        );
+        
+        Visitor visitor5 = new Visitor(
+            "Ava", "Rodriguez", 20, "555-3005",
+            "V305", "Standard", 48.00, 3
+        );
+        
+        Visitor visitor6 = new Visitor(
+            "Sophia", "Lopez", 31, "555-3006",
+            "V306", "Platinum", 175.00, 22
+        );
+        
+        Visitor visitor7 = new Visitor(
+            "Mason", "Lee", 16, "555-3007",
+            "V307", "Standard", 55.00, 5
+        );
+        
+        Visitor visitor8 = new Visitor(
+            "Isabella", "Walker", 25, "555-3008",
+            "V308", "Gold", 95.00, 12
+        );
+        
+        Visitor visitor9 = new Visitor(
+            "Ethan", "Hall", 19, "555-3009",
+            "V309", "Standard", 52.00, 6
+        );
+        
+        Visitor visitor10 = new Visitor(
+            "Mia", "Allen", 29, "555-3010",
+            "V310", "Platinum", 160.00, 20
+        );
+        
+        Visitor visitor11 = new Visitor(
+            "Lucas", "Young", 22, "555-3011",
+            "V311", "Gold", 90.00, 9
+        );
+        
+        Visitor visitor12 = new Visitor(
+            "Harper", "King", 24, "555-3012",
+            "V312", "Standard", 54.00, 7
+        );
+        
+        // Add visitors to queue
+        scoobyDooSpooky.addVisitorToQueue(visitor1);
+        scoobyDooSpooky.addVisitorToQueue(visitor2);
+        scoobyDooSpooky.addVisitorToQueue(visitor3);
+        scoobyDooSpooky.addVisitorToQueue(visitor4);
+        scoobyDooSpooky.addVisitorToQueue(visitor5);
+        scoobyDooSpooky.addVisitorToQueue(visitor6);
+        scoobyDooSpooky.addVisitorToQueue(visitor7);
+        scoobyDooSpooky.addVisitorToQueue(visitor8);
+        scoobyDooSpooky.addVisitorToQueue(visitor9);
+        scoobyDooSpooky.addVisitorToQueue(visitor10);
+        scoobyDooSpooky.addVisitorToQueue(visitor11);
+        scoobyDooSpooky.addVisitorToQueue(visitor12);
+        
+        System.out.println("\n--- Printing Queue BEFORE Running Cycle ---");
+        
+        // Print all visitors in the queue before cycle
+        scoobyDooSpooky.printQueue();
+        
+        System.out.println("\n--- Running One Cycle ---");
+        
+        // Run one cycle (will process maxRider visitors from queue)
+        scoobyDooSpooky.runOneCycle();
+        
+        System.out.println("\n--- Printing Queue AFTER Running Cycle ---");
+        
+        // Print all visitors in the queue after cycle
+        scoobyDooSpooky.printQueue();
+        
+        System.out.println("\n--- Printing Ride History (Visitors Who Took the Ride) ---");
+        
+        // Print all visitors in the collection (ride history)
+        scoobyDooSpooky.printRideHistory();
+        
+        System.out.println("============================================");
+        System.out.println("Summary:");
+        System.out.println("- Started with 12 visitors in queue");
+        System.out.println("- Ran 1 cycle with max " + scoobyDooSpooky.getMaxRider() + " riders");
+        System.out.println("- " + scoobyDooSpooky.getMaxRider() + " visitors took the ride");
+        System.out.println("- " + (12 - scoobyDooSpooky.getMaxRider()) + " visitors remain in queue");
+        System.out.println("- Total cycles run: " + scoobyDooSpooky.getNumOfCycles());
+        System.out.println("============================================");
+        System.out.println("    PART 5 DEMO COMPLETED");
+        System.out.println("============================================\n");
     }
     
     public void partSix() {
