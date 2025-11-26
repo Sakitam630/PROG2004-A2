@@ -5,6 +5,7 @@ public class AssignmentTwo {
         assignment.partFourA();
         assignment.partFourB();
         assignment.partFive();
+        assignment.partSix();
     }
     
     /**
@@ -434,7 +435,114 @@ public class AssignmentTwo {
         System.out.println("============================================\n");
     }
     
+    /**
+     * Part 6: Demonstrates exporting ride history to a CSV file.
+     * Shows creating a ride, adding visitors to history, and exporting to file
+     * with proper I/O exception handling.
+     */
     public void partSix() {
+        System.out.println("\n============================================");
+        System.out.println("    PART 6: FILE EXPORT DEMO");
+        System.out.println("============================================\n");
+        
+        // Create an Employee to operate the ride
+        Employee operator = new Employee(
+            "David", "Chen", 33, "555-5001",
+            "EMP005", "Senior Ride Operator", 30.00, true
+        );
+        
+        // Create a new Ride object
+        Ride supermanEscape = new Ride(
+            "Superman Escape",
+            "Accelerator Coaster",
+            18,  // max capacity
+            14,  // minimum age
+            20.00,  // ticket price
+            operator,
+            true  // operational
+        );
+        
+        supermanEscape.setOperator(operator);
+        
+        System.out.println("Ride Created: " + supermanEscape.getRideName());
+        System.out.println("Type: Accelerator Coaster");
+        System.out.println("\n--- Adding Visitors to Ride History ---\n");
+        
+        // Create and add minimum 5 Visitors to the ride history
+        Visitor visitor1 = new Visitor(
+            "Daniel", "Wilson", 28, "555-4001",
+            "V401", "Platinum", 195.00, 28
+        );
+        
+        Visitor visitor2 = new Visitor(
+            "Emily", "Moore", 32, "555-4002",
+            "V402", "Gold", 105.00, 19
+        );
+        
+        Visitor visitor3 = new Visitor(
+            "Ryan", "Taylor", 25, "555-4003",
+            "V403", "Standard", 58.00, 8
+        );
+        
+        Visitor visitor4 = new Visitor(
+            "Sarah", "Anderson", 29, "555-4004",
+            "V404", "Platinum", 210.00, 35
+        );
+        
+        Visitor visitor5 = new Visitor(
+            "Michael", "Thomas", 23, "555-4005",
+            "V405", "Gold", 98.00, 16
+        );
+        
+        Visitor visitor6 = new Visitor(
+            "Jessica", "Jackson", 27, "555-4006",
+            "V406", "Standard", 62.00, 11
+        );
+        
+        Visitor visitor7 = new Visitor(
+            "Christopher", "White", 31, "555-4007",
+            "V407", "Platinum", 225.00, 42
+        );
+        
+        // Add visitors to ride history
+        supermanEscape.addVisitorToHistory(visitor1);
+        supermanEscape.addVisitorToHistory(visitor2);
+        supermanEscape.addVisitorToHistory(visitor3);
+        supermanEscape.addVisitorToHistory(visitor4);
+        supermanEscape.addVisitorToHistory(visitor5);
+        supermanEscape.addVisitorToHistory(visitor6);
+        supermanEscape.addVisitorToHistory(visitor7);
+        
+        System.out.println("\n--- Current Ride History ---");
+        
+        // Display the current ride history
+        supermanEscape.printRideHistory();
+        
+        System.out.println("\n--- Exporting Ride History to File ---\n");
+        
+        // Export the visitors to a CSV file
+        String filename = "ride_history_export.csv";
+        boolean exportSuccess = supermanEscape.exportRideHistory(filename);
+        
+        if (exportSuccess) {
+            System.out.println("\n✓ File export completed successfully!");
+            System.out.println("  You can open '" + filename + "' with any text editor or spreadsheet program.");
+            System.out.println("  Each line contains visitor details in CSV format:");
+            System.out.println("  Format: VisitorID,FirstName,LastName,Age,Contact,Membership,Balance,Visits");
+        } else {
+            System.out.println("\n✗ File export failed. Please check the error messages above.");
+        }
+        
+        System.out.println("\n============================================");
+        System.out.println("Data Persistence Benefits:");
+        System.out.println("- Backup: Visitor data safely stored in file");
+        System.out.println("- Portability: CSV format readable by multiple programs");
+        System.out.println("- Analysis: Data can be imported to Excel/spreadsheet");
+        System.out.println("- Recovery: Can restore data if system fails");
+        System.out.println("- Audit: Historical record of ride usage");
+        System.out.println("============================================");
+        System.out.println("    PART 6 DEMO COMPLETED");
+        System.out.println("============================================\n");
     }
     
     public void partSeven() {
