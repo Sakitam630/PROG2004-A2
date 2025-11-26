@@ -3,6 +3,9 @@ import java.util.Queue;
 import java.util.Iterator;
 import java.util.Collections;
 import java.util.Comparator;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 
 /**
  * Ride class represents theme park attractions/rides.
@@ -518,6 +521,97 @@ public class Ride implements RideInterface {
         // Use Collections.sort with the provided Comparator
         Collections.sort(rideHistory, comparator);
         System.out.println("Success: Ride history has been sorted using custom comparator.");
+    }
+    
+    /**
+     * Part6: Exports ride history to a CSV file.
+     * Writes each visitor's details on a separate line in comma-separated format.
+     * Implements comprehensive exception handling and resource management using try-with-resources.
+     * 
+     * CSV Format per line: visitorId,firstName,lastName,age,contactNumber,membershipType,accountBalance,visitCount
+     * 
+     * @param filename The name of the file to export to (relative or absolute path)
+     * @return true if export was successful, false otherwise
+     */
+    public boolean exportRideHistory(String filename) {
+        // Validate filename
+        if (filename == null || filename.trim().isEmpty()) {
+            System.out.println("Error: Cannot export to file. Filename is null or empty.");
+            return false;
+        }
+        
+        // Check if there's data to export
+        if (rideHistory.isEmpty()) {
+            System.out.println("Warning: Ride history is empty. No data to export.");
+            return false;
+        }
+        
+        // Use try-with-resources for automatic resource management
+        // BufferedWriter provides efficient writing with buffering
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filename))) {
+            
+            // Write header line for better CSV structure
+            writer.write("VisitorID,FirstName,LastName,Age,ContactNumber,MembershipType,AccountBalance,VisitCount");
+            writer.newLine();
+            
+            // Export each visitor in the ride history
+            int exportedCount = 0;
+            for (Visitor visitor : rideHistory) {
+                // Build CSV line for this visitor
+                String csvLine = String.format("%s,%s,%s,%d,%s,%s,%.2f,%d",
+                    visitor.getVisitorId(),
+                    visitor.getFirstName(),
+                    visitor.getLastName(),
+                    visitor.getAge(),
+                    visitor.getContactNumber(),
+                    visitor.getMembershipType(),
+                    visitor.getAccountBalance(),
+                    visitor.getVisitCount()
+                );
+                
+                writer.write(csvLine);
+                writer.newLine();
+                exportedCount++;
+            }
+            
+            // Flush to ensure all data is written
+            writer.flush();
+            
+            System.out.println("========================================");
+            System.out.println("Export Successful!");
+            System.out.println("  - File: " + filename);
+            System.out.println("  - Records exported: " + exportedCount);
+            System.out.println("  - Format: CSV (Comma-Separated Values)");
+            System.out.println("========================================");
+            
+            return true;
+            
+        } catch (IOException e) {
+            // Handle I/O exceptions with detailed error message
+            System.err.println("========================================");
+            System.err.println("Error: Failed to export ride history to file.");
+            System.err.println("  - File: " + filename);
+            System.err.println("  - Reason: " + e.getMessage());
+            System.err.println("  - Possible causes:");
+            System.err.println("    • File path is invalid");
+            System.err.println("    • No write permission for directory");
+            System.err.println("    • Disk space full");
+            System.err.println("    • File is locked by another process");
+            System.err.println("========================================");
+            
+            return false;
+            
+        } catch (Exception e) {
+            // Catch any unexpected exceptions
+            System.err.println("========================================");
+            System.err.println("Error: Unexpected error during export.");
+            System.err.println("  - File: " + filename);
+            System.err.println("  - Error: " + e.getClass().getSimpleName());
+            System.err.println("  - Message: " + e.getMessage());
+            System.err.println("========================================");
+            
+            return false;
+        }
     }
     
     /**
