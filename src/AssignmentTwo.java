@@ -6,6 +6,7 @@ public class AssignmentTwo {
         assignment.partFourB();
         assignment.partFive();
         assignment.partSix();
+        assignment.partSeven();
     }
     
     /**
@@ -545,6 +546,86 @@ public class AssignmentTwo {
         System.out.println("============================================\n");
     }
     
+    /**
+     * Part 7: Demonstrates importing ride history from a CSV file.
+     * Creates a new ride, imports the file created in Part 6,
+     * and verifies the import by printing visitor count and details.
+     */
     public void partSeven() {
+        System.out.println("\n============================================");
+        System.out.println("    PART 7: FILE IMPORT DEMO");
+        System.out.println("============================================\n");
+        
+        // Create an Employee to operate the ride
+        Employee operator = new Employee(
+            "Rachel", "Green", 30, "555-6001",
+            "EMP006", "Ride Operator", 27.00, true
+        );
+        
+        // Create a NEW Ride object (empty ride history)
+        Ride greenLanternCoaster = new Ride(
+            "Green Lantern Coaster",
+            "Flying Coaster",
+            22,  // max capacity
+            13,  // minimum age
+            17.00,  // ticket price
+            operator,
+            true  // operational
+        );
+        
+        greenLanternCoaster.setOperator(operator);
+        
+        System.out.println("Ride Created: " + greenLanternCoaster.getRideName());
+        System.out.println("Type: Flying Coaster");
+        System.out.println("Initial ride history size: " + greenLanternCoaster.numberOfVisitors());
+        
+        System.out.println("\n--- Importing Ride History from File ---\n");
+        
+        // Import the file created in Part 6
+        String filename = "ride_history_export.csv";
+        int importedCount = greenLanternCoaster.importRideHistory(filename);
+        
+        // Check import result
+        if (importedCount > 0) {
+            System.out.println("\n✓ Import completed successfully!\n");
+            
+            System.out.println("--- Verification: Number of Visitors ---\n");
+            
+            // Print the number of Visitors in the LinkedList
+            int totalVisitors = greenLanternCoaster.numberOfVisitors();
+            System.out.println("Total visitors in ride history: " + totalVisitors);
+            System.out.println("Visitors imported from file: " + importedCount);
+            
+            if (totalVisitors == importedCount) {
+                System.out.println("✓ Verification: All imported visitors added to LinkedList successfully!");
+            } else {
+                System.out.println("⚠ Warning: Mismatch between imported count and LinkedList size.");
+            }
+            
+            System.out.println("\n--- Verification: Visitor Details ---\n");
+            
+            // Print all Visitors in the LinkedList to confirm details
+            greenLanternCoaster.printRideHistory();
+            
+        } else if (importedCount == 0) {
+            System.out.println("\n⚠ Warning: No visitors were imported.");
+            System.out.println("The file may be empty or contain only invalid records.");
+            
+        } else {
+            System.out.println("\n✗ Import failed with critical error.");
+            System.out.println("Please check the error messages above for details.");
+        }
+        
+        System.out.println("\n============================================");
+        System.out.println("Data Import Benefits:");
+        System.out.println("- Persistence: Restore visitor data from backups");
+        System.out.println("- Migration: Transfer data between systems");
+        System.out.println("- Recovery: Recover data after system failures");
+        System.out.println("- Integration: Import data from external sources");
+        System.out.println("- Validation: Comprehensive error handling ensures data integrity");
+        System.out.println("- Cohesion: File I/O operations highly organized and maintainable");
+        System.out.println("============================================");
+        System.out.println("    PART 7 DEMO COMPLETED");
+        System.out.println("============================================\n");
     }
 }

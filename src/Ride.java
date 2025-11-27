@@ -5,7 +5,10 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
+import java.io.FileNotFoundException;
 
 /**
  * Ride class represents theme park attractions/rides.
@@ -611,6 +614,199 @@ public class Ride implements RideInterface {
             System.err.println("========================================");
             
             return false;
+        }
+    }
+    
+    /**
+     * Part7: Imports ride history from a CSV file and adds visitors to the ride history.
+     * Reads the CSV file created by exportRideHistory and reconstructs Visitor objects.
+     * Implements comprehensive exception handling for file reading operations.
+     * 
+     * CSV Format expected per line: visitorId,firstName,lastName,age,contactNumber,membershipType,accountBalance,visitCount
+     * 
+     * @param filename The name of the file to import from (relative or absolute path)
+     * @return The number of visitors successfully imported, -1 if critical error occurred
+     */
+    public int importRideHistory(String filename) {
+        // Validate filename
+        if (filename == null || filename.trim().isEmpty()) {
+            System.err.println("Error: Cannot import from file. Filename is null or empty.");
+            return -1;
+        }
+        
+        int importedCount = 0;
+        int lineNumber = 0;
+        int skippedLines = 0;
+        
+        // Use try-with-resources for automatic resource management
+        // BufferedReader provides efficient reading with buffering
+        try (BufferedReader reader = new BufferedReader(new FileReader(filename))) {
+            
+            System.out.println("========================================");
+            System.out.println("Starting import from file: " + filename);
+            System.out.println("========================================\n");
+            
+            String line;
+            
+            // Read first line (header) and validate
+            line = reader.readLine();
+            lineNumber++;
+            
+            if (line == null) {
+                System.err.println("Error: File is empty. No data to import.");
+                return -1;
+            }
+            
+            // Validate header format
+            String expectedHeader = "VisitorID,FirstName,LastName,Age,ContactNumber,MembershipType,AccountBalance,VisitCount";
+            if (!line.trim().equals(expectedHeader)) {
+                System.err.println("Warning: Header format doesn't match expected format.");
+                System.err.println("  Expected: " + expectedHeader);
+                System.err.println("  Found: " + line);
+                System.err.println("  Continuing with import...\n");
+            } else {
+                System.out.println("✓ Header validated successfully.\n");
+            }
+            
+            // Read and process each data line
+            while ((line = reader.readLine()) != null) {
+                lineNumber++;
+                
+                // Skip empty lines
+                if (line.trim().isEmpty()) {
+                    skippedLines++;
+                    continue;
+                }
+                
+                try {
+                    // Parse CSV line - split by comma
+                    String[] fields = line.split(",");
+                    
+                    // Validate field count
+                    if (fields.length != 8) {
+                        System.err.println("Warning: Line " + lineNumber + " has incorrect number of fields (expected 8, found " + 
+                                         fields.length + "). Skipping line.");
+                        System.err.println("  Line content: " + line);
+                        skippedLines++;
+                        continue;
+                    }
+                    
+                    // Extract and parse each field with validation
+                    String visitorId = fields[0].trim();
+                    String firstName = fields[1].trim();
+                    String lastName = fields[2].trim();
+                    int age = Integer.parseInt(fields[3].trim());
+                    String contactNumber = fields[4].trim();
+                    String membershipType = fields[5].trim();
+                    double accountBalance = Double.parseDouble(fields[6].trim());
+                    int visitCount = Integer.parseInt(fields[7].trim());
+                    
+                    // Validate parsed data
+                    if (visitorId.isEmpty() || firstName.isEmpty() || lastName.isEmpty()) {
+                        System.err.println("Warning: Line " + lineNumber + " has empty required fields. Skipping.");
+                        skippedLines++;
+                        continue;
+                    }
+                    
+                    if (age < 0 || accountBalance < 0 || visitCount < 0) {
+                        System.err.println("Warning: Line " + lineNumber + " has invalid numeric values. Skipping.");
+                        skippedLines++;
+                        continue;
+                    }
+                    
+                    // Create new Visitor object with parsed data
+                    Visitor visitor = new Visitor(
+                        firstName,
+                        lastName,
+                        age,
+                        contactNumber,
+                        visitorId,
+                        membershipType,
+                        accountBalance,
+                        visitCount
+                    );
+                    
+                    // Add to ride history (LinkedList)
+                    rideHistory.add(visitor);
+                    importedCount++;
+                    
+                    System.out.println("  ✓ Imported: " + visitor.getFullName() + " (ID: " + visitorId + ")");
+                    
+                } catch (NumberFormatException e) {
+                    // Handle parsing errors for numeric fields
+                    System.err.println("Error: Line " + lineNumber + " contains invalid numeric data.");
+                    System.err.println("  Line content: " + line);
+                    System.err.println("  Parsing error: " + e.getMessage());
+                    skippedLines++;
+                    
+                } catch (ArrayIndexOutOfBoundsException e) {
+                    // Handle unexpected array access issues
+                    System.err.println("Error: Line " + lineNumber + " has unexpected format.");
+                    System.err.println("  Line content: " + line);
+                    skippedLines++;
+                    
+                } catch (Exception e) {
+                    // Catch any other unexpected exceptions during line processing
+                    System.err.println("Error: Unexpected error processing line " + lineNumber);
+                    System.err.println("  Line content: " + line);
+                    System.err.println("  Error: " + e.getMessage());
+                    skippedLines++;
+                }
+            }
+            
+            // Print import summary
+            System.out.println("\n========================================");
+            System.out.println("Import Summary:");
+            System.out.println("  - File: " + filename);
+            System.out.println("  - Total lines processed: " + (lineNumber - 1)); // Exclude header
+            System.out.println("  - Visitors successfully imported: " + importedCount);
+            System.out.println("  - Lines skipped/failed: " + skippedLines);
+            System.out.println("  - Current ride history size: " + rideHistory.size());
+            System.out.println("========================================");
+            
+            return importedCount;
+            
+        } catch (FileNotFoundException e) {
+            // Handle case where file doesn't exist
+            System.err.println("========================================");
+            System.err.println("Error: File not found.");
+            System.err.println("  - File: " + filename);
+            System.err.println("  - Possible causes:");
+            System.err.println("    • File does not exist at specified path");
+            System.err.println("    • File path is incorrect");
+            System.err.println("    • No read permission for the file");
+            System.err.println("  - Please verify the file exists and path is correct.");
+            System.err.println("========================================");
+            
+            return -1;
+            
+        } catch (IOException e) {
+            // Handle I/O exceptions during file reading
+            System.err.println("========================================");
+            System.err.println("Error: I/O error while reading file.");
+            System.err.println("  - File: " + filename);
+            System.err.println("  - Reason: " + e.getMessage());
+            System.err.println("  - Possible causes:");
+            System.err.println("    • File is corrupted");
+            System.err.println("    • File is locked by another process");
+            System.err.println("    • Insufficient read permissions");
+            System.err.println("    • Storage device error");
+            System.err.println("  - Records imported before error: " + importedCount);
+            System.err.println("========================================");
+            
+            return importedCount; // Return partial count if some records were imported
+            
+        } catch (Exception e) {
+            // Catch any unexpected exceptions
+            System.err.println("========================================");
+            System.err.println("Error: Unexpected error during import.");
+            System.err.println("  - File: " + filename);
+            System.err.println("  - Error: " + e.getClass().getSimpleName());
+            System.err.println("  - Message: " + e.getMessage());
+            System.err.println("  - Records imported before error: " + importedCount);
+            System.err.println("========================================");
+            
+            return importedCount; // Return partial count if some records were imported
         }
     }
     
